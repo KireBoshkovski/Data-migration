@@ -1,0 +1,69 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      sqlserver:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_POSTGRES_JDBC-URL: jdbc:postgresql://postgres:5432/data_migration
+      SPRING_DATASOURCE_POSTGRES_USERNAME: postgres
+      SPRING_DATASOURCE_POSTGRES_PASSWORD: mypassword
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+      SPRING_DATASOURCE_SQLSERVER_JDBC-URL: jdbc:sqlserver://sqlserver:1433;databaseName=master;trustServerCertificate=true
+      SPRING_DATASOURCE_SQLSERVER_USERNAME: sa
+      SPRING_DATASOURCE_SQLSERVER_PASSWORD: "yourStrong(!)Password"
+    ports:
+      - "8080:8080"
+    networks:
+      - dm_network
+
+  postgres:
+    image: postgres:15
+    restart: on-failure
+    environment:
+      POSTGRES_DB: data_migration
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - dm_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d data_migration" ]
+      interval: 10s
+      retries: 10
+      start_period: 40s
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    hostname: sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "yourStrong(!)Password"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    networks:
+      - dm_network
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -C -Q 'SELECT 1' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+volumes:
+  pg_data:
+  mssql_data:
+networks:
+  dm_network:
+    driver: bridge
