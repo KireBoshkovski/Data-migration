@@ -2,6 +2,7 @@ package mk.ukim.finki.web.datamigration.postgres.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Student {
+@Table(name = "Student")
+public class PStudent {
     @Id
     private String indeks;
     private String name;

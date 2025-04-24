@@ -15,7 +15,7 @@ services:
 
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
-      SPRING_DATASOURCE_SQLSERVER_JDBC-URL: jdbc:sqlserver://sqlserver:1433;databaseName=master;trustServerCertificate=true
+      SPRING_DATASOURCE_SQLSERVER_JDBC-URL: jdbc:sqlserver://sqlserver:1433;databaseName=tempdb;trustServerCertificate=true
       SPRING_DATASOURCE_SQLSERVER_USERNAME: sa
       SPRING_DATASOURCE_SQLSERVER_PASSWORD: "yourStrong(!)Password"
     ports:
