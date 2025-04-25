@@ -1,10 +1,11 @@
-package mk.ukim.finki.web.datamigration.sqlserver.model;
+package mk.ukim.finki.web.datamigration.postgres.model;
+
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "student_subject_enrollment")
-public class MStudentSubjectEnrollment {
+public class PStudentSubjectEnrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,7 +13,7 @@ public class MStudentSubjectEnrollment {
 
     @ManyToOne
     @JoinColumn(name = "student_index", referencedColumnName = "[index]")
-    private MStudent student;
+    private PStudent student;
 
     @Column(name = "course_code")
     private String courseCode;
