@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "[Student]")
+@Table(name = "student")
 public class PStudent {
 
     @Id

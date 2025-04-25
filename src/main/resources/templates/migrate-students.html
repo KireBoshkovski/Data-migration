@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Migration</title>
+</head>
+<body>
+<h2>Student Migration</h2>
+<div th:if="${migrated != null}">
+    <p>✅ Successfully migrated: <strong th:text="${migrated}">0</strong></p>
+    <p>❌ Failed to migrate: <strong th:text="${failed}">0</strong></p>
+
+    <div th:if="${failed > 0}">
+        <p>📄 Download list of failed students:</p>
+        <a th:href="@{/${file}}" download>Download Failed Students CSV</a>
+    </div>
+    <hr>
+</div>
+
+
+<form th:action="@{/migrate}" method="post">
+    <label for="semesterId">Select Semester:</label>
+    <select id="semesterId" name="semesterId">
+        <!-- Example of hardcoded values
+        <option value="1">Semester 1</option>
+        <option value="2">Semester 2</option>
+        <option value="3">Semester 3</option>
+        -->
+
+        <!-- Or dynamically populated from the model -->
+
+        <option th:each="semester : ${semesters}"
+                th:value="${semester.id}"
+                th:text="${semester.id}">
+        </option>
+    </select>
+
+    <button type="submit">Migrate</button>
+</form>
+</body>
+</html>

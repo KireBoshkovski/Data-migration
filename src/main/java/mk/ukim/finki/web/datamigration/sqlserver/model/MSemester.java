@@ -1,13 +1,18 @@
 package mk.ukim.finki.web.datamigration.sqlserver.model;
 
 import jakarta.persistence.*;
-
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "semesters")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MSemester {
 
     @Id

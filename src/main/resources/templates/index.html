@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>I-Know migration</title>
 </head>
 <body>
 <h1>Student Lists</h1>
@@ -14,7 +14,7 @@
         <th>Name</th>
     </tr>
     <tr th:each="student : ${msstudents}">
-        <td th:text="${student.indeks}"></td>
+        <td th:text="${student.index}"></td>
         <td th:text="${student.name}"></td>
     </tr>
 </table>
@@ -26,7 +26,7 @@
         <th>Name</th>
     </tr>
     <tr th:each="student : ${pstudents}">
-        <td th:text="${student.indeks}"></td>
+        <td th:text="${student.index}"></td>
         <td th:text="${student.name}"></td>
     </tr>
 </table>
