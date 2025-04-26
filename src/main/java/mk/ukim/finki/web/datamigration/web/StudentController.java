@@ -1,11 +1,15 @@
 package mk.ukim.finki.web.datamigration.web;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.web.datamigration.postgres.model.PStudent;
 import mk.ukim.finki.web.datamigration.postgres.service.PostgresStudentService;
 import mk.ukim.finki.web.datamigration.sqlserver.model.MStudent;
 import mk.ukim.finki.web.datamigration.sqlserver.service.MSemesterService;
 import mk.ukim.finki.web.datamigration.sqlserver.service.MStudentService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,14 +48,24 @@ public class StudentController {
     }
 
     @PostMapping("/migrate")
-    public String migrateStudents(@RequestParam Long semesterId, Model model) {
+    public String migrateStudents(@RequestParam Long semesterId, Model model, HttpSession session) {
         MigrationResult result = this.migrationService.migrateStudents(semesterId);
 
         model.addAttribute("migrated", result.getMigrated());
         model.addAttribute("failed", result.getFailed());
-        model.addAttribute("file", result.getFilename());
+        session.setAttribute("csvContent", result.getCsv());
         model.addAttribute("semesters", this.semesterService.getAllSemesters());
-
         return "migrate-students";
+    }
+
+    @GetMapping("/migrate/download-failed")
+    public ResponseEntity<byte[]> downloadFailedStudents(HttpSession session) {
+        String content = (String) session.getAttribute("csvContent");
+        byte[] bytes = content.getBytes();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"failed_students.csv\"")
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(bytes);
     }
 }

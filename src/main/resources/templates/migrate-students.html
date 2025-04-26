@@ -12,7 +12,9 @@
 
     <div th:if="${failed > 0}">
         <p>📄 Download list of failed students:</p>
-        <a th:href="@{/${file}}" download>Download Failed Students CSV</a>
+        <form th:action="@{/migrate/download-failed}" method="get">
+            <button type="submit">Download failed</button>
+        </form>
     </div>
     <hr>
 </div>

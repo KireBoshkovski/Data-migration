@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import mk.ukim.finki.web.datamigration.postgres.model.PStudent;
 import mk.ukim.finki.web.datamigration.postgres.repository.PostgresStudentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,7 +18,8 @@ public class PostgresStudentService {
         return this.repository.findAll();
     }
 
-    public PStudent save(PStudent student) {
-        return this.repository.save(student);
+    public void save(PStudent student) {
+        this.repository.save(student);
+        this.repository.flush();
     }
 }

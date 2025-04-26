@@ -8,5 +8,5 @@ import lombok.Data;
 public class MigrationResult {
     private int migrated;
     private int failed;
-    private String filename;
+    private String csv;
 }

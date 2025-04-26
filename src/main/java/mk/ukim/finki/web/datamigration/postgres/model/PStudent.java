@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Entity
@@ -14,25 +15,25 @@ import java.util.List;
 public class PStudent {
 
     @Id
-    @Column(name = "[index]")
+    @Column(name = "[index]", nullable = false)
     private Long index;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "surname")
+    @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "fathers_name")
+    @Column(name = "fathers_name", nullable = false)
     private String fathersName;
 
-    @Column(name = "code")
+    @Column(name = "code", nullable = false)
     private String programCode;
 
-    @Column(name = "start_year")
+    @Column(name = "start_year", nullable = false)
     private Integer startYear;
 
     @ManyToMany
