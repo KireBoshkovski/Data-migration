@@ -1,9 +1,11 @@
 package mk.ukim.finki.web.datamigration.sqlserver.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "student_subject_enrollment")
+@Data
 public class MStudentSubjectEnrollment {
 
     @Id

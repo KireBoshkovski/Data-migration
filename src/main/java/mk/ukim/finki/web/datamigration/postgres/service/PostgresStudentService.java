@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import mk.ukim.finki.web.datamigration.postgres.model.PStudent;
 import mk.ukim.finki.web.datamigration.postgres.repository.PostgresStudentRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -21,5 +21,9 @@ public class PostgresStudentService {
     public void save(PStudent student) {
         this.repository.save(student);
         this.repository.flush();
+    }
+
+    public Optional<PStudent> findByIndex(Long index) {
+        return repository.findByIndex(index);
     }
 }

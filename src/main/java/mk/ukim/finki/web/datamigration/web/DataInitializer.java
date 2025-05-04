@@ -4,8 +4,10 @@ import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.web.datamigration.sqlserver.model.MSemester;
 import mk.ukim.finki.web.datamigration.sqlserver.model.MStudent;
+import mk.ukim.finki.web.datamigration.sqlserver.model.MStudentSubjectEnrollment;
 import mk.ukim.finki.web.datamigration.sqlserver.repository.MSemesterRepository;
 import mk.ukim.finki.web.datamigration.sqlserver.repository.MStudentRepository;
+import mk.ukim.finki.web.datamigration.sqlserver.repository.MStudentSubjectEnrollmentRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ import java.util.List;
 public class DataInitializer {
     private final MStudentRepository studentRepository;
     private final MSemesterRepository semesterRepository;
+    private final MStudentSubjectEnrollmentRepository enrollmentRepository;
 
     @PostConstruct
     public void seedData() {
@@ -60,5 +63,18 @@ public class DataInitializer {
 
         studentRepository.saveAll(students);
         semesterRepository.saveAll(semesters);
+
+        List<MStudentSubjectEnrollment> enrollments = new ArrayList<>();
+        for (MStudent student : students) {
+            for (int j = 1; j <= 3; j++) {
+                MStudentSubjectEnrollment enrollment = new MStudentSubjectEnrollment();
+                enrollment.setStudent(student);
+                enrollment.setCourseCode("COURSE" + j);
+                enrollment.setNumEnrollments((j % 3) + 1);
+                enrollments.add(enrollment);
+            }
+        }
+
+        enrollmentRepository.saveAll(enrollments);
     }
 }

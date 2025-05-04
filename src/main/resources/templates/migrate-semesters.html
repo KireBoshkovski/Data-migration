@@ -1,0 +1,46 @@
+<h2>MS Semesters</h2>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Description</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Action</th>
+  </tr>
+  <tr th:each="sem : ${mssemesters}">
+    <td th:text="${sem.id != null ? sem.id : ''}"></td>
+    <td th:text="${sem.description != null ? sem.description : ''}"></td>
+    <td th:text="${sem.startDate != null ? sem.startDate : ''}"></td>
+    <td th:text="${sem.endDate != null ? sem.endDate : ''}"></td>
+    <td>
+      <form th:action="@{/semester/migrate-semesters}" method="post">
+        <input type="hidden" name="semesterId" th:value="${sem.id}"/>
+        <button type="submit">Migrate</button>
+      </form>
+    </td>
+  </tr>
+</table>
+<p th:if="${#lists.isEmpty(mssemesters)}">No semesters found in SQL Server.</p>
+
+<h2>P Semesters</h2>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Description</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+  </tr>
+  <tr th:each="sem : ${psemesters}">
+    <td th:text="${sem.id != null ? sem.id : ''}"></td>
+    <td th:text="${sem.description != null ? sem.description : ''}"></td>
+    <td th:text="${sem.startDate != null ? sem.startDate : ''}"></td>
+    <td th:text="${sem.endDate != null ? sem.endDate : ''}"></td>
+  </tr>
+</table>
+<p th:if="${#lists.isEmpty(psemesters)}">No semesters found in Postgres.</p>
+
+<form th:action="@{/semester/migrate-semesters/download-failed}" method="get"
+      th:if="${failed != null and !#lists.isEmpty(failed)}">
+  <button type="submit">Download Failed Semesters CSV</button>
+</form>
+

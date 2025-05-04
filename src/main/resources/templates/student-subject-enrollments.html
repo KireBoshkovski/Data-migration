@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Subject Enrollments</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        h2 {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<h3>Migrate by Course Code</h3>
+<form th:action="@{/student-subject/migrate-by-course}" method="post">
+    <input type="text" name="courseCode" placeholder="Enter Course Code" required/>
+    <button type="submit">Migrate</button>
+</form>
+
+<h2>MS SQL Server - Student Subject Enrollments</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Student Index</th>
+        <th>Course Code</th>
+        <th>Num Enrollments</th>
+    </tr>
+    <tr th:each="enrollment : ${studentSubjectEnrollments}">
+        <td th:text="${enrollment.id}">1</td>
+        <td th:text="${enrollment.student != null ? enrollment.student.index : 'N/A'}">200001</td>
+        <td th:text="${enrollment.courseCode}">COURSE1</td>
+        <td th:text="${enrollment.numEnrollments}">2</td>
+    </tr>
+</table>
+<p th:if="${#lists.isEmpty(studentSubjectEnrollments)}">No MS SQL enrollments found.</p>
+
+<h2>PostgreSQL - Student Subject Enrollments</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Student Index</th>
+        <th>Course Code</th>
+        <th>Num Enrollments</th>
+    </tr>
+    <tr th:each="enrollment : ${postgresStudentSubjectEnrollments}">
+        <td th:text="${enrollment.id}">1</td>
+        <td th:text="${enrollment.student != null ? enrollment.student.index : 'N/A'}">200001</td>
+        <td th:text="${enrollment.courseCode}">COURSE1</td>
+        <td th:text="${enrollment.numEnrollments}">2</td>
+    </tr>
+</table>
+<p th:if="${#lists.isEmpty(postgresStudentSubjectEnrollments)}">No PostgreSQL enrollments found.</p>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>I-Know Migration - Semesters</title>
+</head>
+<body>
+<h1>Semester Lists</h1>
+
+<h2>MSSQL Semesters</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Semester Type ID</th>
+        <th>Faculty ID</th>
+        <th>Description</th>
+        <th>CH Start Date</th>
+        <th>CH End Date</th>
+    </tr>
+    <tr th:each="semester : ${mssemesters}">
+        <td th:text="${semester.id}"></td>
+        <td th:text="${semester.startDate}"></td>
+        <td th:text="${semester.endDate}"></td>
+        <td th:text="${semester.semesterTypeId}"></td>
+        <td th:text="${semester.facultyId}"></td>
+        <td th:text="${semester.description}"></td>
+        <td th:text="${semester.chStartDate}"></td>
+        <td th:text="${semester.chEndDate}"></td>
+    </tr>
+</table>
+
+<h2>PostgreSQL Semesters</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Semester Type ID</th>
+        <th>Faculty ID</th>
+        <th>Description</th>
+        <th>CH Start Date</th>
+        <th>CH End Date</th>
+    </tr>
+    <tr th:each="semester : ${psemesters}">
+        <td th:text="${semester.id}"></td>
+        <td th:text="${semester.startDate}"></td>
+        <td th:text="${semester.endDate}"></td>
+        <td th:text="${semester.semesterTypeId}"></td>
+        <td th:text="${semester.facultyId}"></td>
+        <td th:text="${semester.description}"></td>
+        <td th:text="${semester.chStartDate}"></td>
+        <td th:text="${semester.chEndDate}"></td>
+    </tr>
+</table>
+</body>
+</html>

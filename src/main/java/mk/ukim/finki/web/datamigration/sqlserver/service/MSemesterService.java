@@ -11,7 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 public class MSemesterService {
     private final MSemesterRepository repository;
+
     public List<MSemester> getAllSemesters() {
         return this.repository.findAll();
+    }
+
+    public MSemester getSemesterById(Long id) {
+        return this.repository.findById(id).orElse(null);
     }
 }
