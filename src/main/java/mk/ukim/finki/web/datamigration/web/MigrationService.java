@@ -145,7 +145,7 @@ public class MigrationService {
     public MigrationResult migrateByCourseCode(String courseCode) {
         int migrated = 0, failed = 0;
         List<MStudentSubjectEnrollment> failedEnrollments = new ArrayList<>();
-
+        StringBuilder csvBuilder = new StringBuilder();
         List<MStudentSubjectEnrollment> enrollments = msStudentSubjectEnrollmentService.findAllByCourseCode(courseCode);
         System.out.println("Found " + enrollments.size() + " enrollments for course code: " + courseCode);
 
@@ -178,6 +178,14 @@ public class MigrationService {
                 pStudentSubjectEnrollmentService.save(pEnrollment);
                 System.out.println("Migrated enrollment for student: " + studentIndex + ", course: " + mEnrollment.getCourseCode());
                 migrated++;
+                csvBuilder.append(pEnrollment.getId())
+                        .append(", ")
+                        .append(pEnrollment.getStudent().getIndex())
+                        .append(", ")
+                        .append(pEnrollment.getCourseCode())
+                        .append(", ")
+                        .append(pEnrollment.getNumEnrollments() != null ? pEnrollment.getNumEnrollments() : 0)
+                        .append("\n");
 
             } catch (Exception e) {
                 System.out.println("Exception while migrating enrollment ID: " + mEnrollment.getId() + " => " + e.getMessage());

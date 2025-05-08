@@ -1,43 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Student Migration</title>
+    <style>
+        nav {
+            background-color: #f0f0f0;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        nav a {
+            margin-right: 1.5rem;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        form {
+            margin-top: 1.5rem;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        select {
+            padding: 0.5rem;
+            margin-right: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background-color: #007BFF;
+        }
+
+        .status-box {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            margin-top: 1.5rem;
+        }
+
+        .status-box p {
+            margin: 0.5rem 0;
+        }
+
+        hr {
+            margin: 1.5rem 0;
+            border: 1px solid #ddd;
+        }
+
+        h2 {
+            margin-top: 2rem;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-<h2>Student Migration</h2>
-<div th:if="${migrated != null}">
-    <p>✅ Successfully migrated: <strong th:text="${migrated}">0</strong></p>
-    <p>❌ Failed to migrate: <strong th:text="${failed}">0</strong></p>
 
-    <div th:if="${failed > 0}">
-        <p>📄 Download list of failed students:</p>
-        <form th:action="@{/migrate/download-failed}" method="get">
-            <button type="submit">Download failed</button>
-        </form>
+<!-- Navbar -->
+<nav>
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/migrate}">Migrate Students</a>
+    <a th:href="@{/semester/migrate-semesters}">Migrate Semesters</a>
+    <a th:href="@{/student-subject}">Subject Enrollments</a>
+</nav>
+
+<div>
+    <h2>Student Migration</h2>
+
+    <div th:if="${migrated != null}" class="status-box">
+        <p>✅ Successfully migrated: <strong th:text="${migrated}">0</strong></p>
+        <p>❌ Failed to migrate: <strong th:text="${failed}">0</strong></p>
+
+        <div th:if="${failed > 0}">
+            <p>📄 Download list of failed students:</p>
+            <form th:action="@{/migrate/download-failed}" method="get">
+                <button type="submit">Download Failed</button>
+            </form>
+        </div>
+        <hr>
     </div>
-    <hr>
+
+    <form th:action="@{/migrate}" method="post">
+        <label for="semesterId">Select Semester:</label>
+        <select id="semesterId" name="semesterId">
+            <option th:each="semester : ${semesters}"
+                    th:value="${semester.id}"
+                    th:text="${semester.id}">
+            </option>
+        </select>
+        <button type="submit">Migrate</button>
+    </form>
 </div>
 
-
-<form th:action="@{/migrate}" method="post">
-    <label for="semesterId">Select Semester:</label>
-    <select id="semesterId" name="semesterId">
-        <!-- Example of hardcoded values
-        <option value="1">Semester 1</option>
-        <option value="2">Semester 2</option>
-        <option value="3">Semester 3</option>
-        -->
-
-        <!-- Or dynamically populated from the model -->
-
-        <option th:each="semester : ${semesters}"
-                th:value="${semester.id}"
-                th:text="${semester.id}">
-        </option>
-    </select>
-
-    <button type="submit">Migrate</button>
-</form>
 </body>
 </html>

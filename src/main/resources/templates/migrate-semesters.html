@@ -1,46 +1,142 @@
-<h2>MS Semesters</h2>
-<table border="1">
-  <tr>
-    <th>ID</th>
-    <th>Description</th>
-    <th>Start Date</th>
-    <th>End Date</th>
-    <th>Action</th>
-  </tr>
-  <tr th:each="sem : ${mssemesters}">
-    <td th:text="${sem.id != null ? sem.id : ''}"></td>
-    <td th:text="${sem.description != null ? sem.description : ''}"></td>
-    <td th:text="${sem.startDate != null ? sem.startDate : ''}"></td>
-    <td th:text="${sem.endDate != null ? sem.endDate : ''}"></td>
-    <td>
-      <form th:action="@{/semester/migrate-semesters}" method="post">
-        <input type="hidden" name="semesterId" th:value="${sem.id}"/>
-        <button type="submit">Migrate</button>
-      </form>
-    </td>
-  </tr>
-</table>
-<p th:if="${#lists.isEmpty(mssemesters)}">No semesters found in SQL Server.</p>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Migrate Semesters</title>
+  <style>
+    nav {
+      background-color: #f0f0f0;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
 
-<h2>P Semesters</h2>
-<table border="1">
-  <tr>
-    <th>ID</th>
-    <th>Description</th>
-    <th>Start Date</th>
-    <th>End Date</th>
-  </tr>
-  <tr th:each="sem : ${psemesters}">
-    <td th:text="${sem.id != null ? sem.id : ''}"></td>
-    <td th:text="${sem.description != null ? sem.description : ''}"></td>
-    <td th:text="${sem.startDate != null ? sem.startDate : ''}"></td>
-    <td th:text="${sem.endDate != null ? sem.endDate : ''}"></td>
-  </tr>
-</table>
-<p th:if="${#lists.isEmpty(psemesters)}">No semesters found in Postgres.</p>
+    nav a {
+      margin-right: 1.5rem;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
 
-<form th:action="@{/semester/migrate-semesters/download-failed}" method="get"
-      th:if="${failed != null and !#lists.isEmpty(failed)}">
-  <button type="submit">Download Failed Semesters CSV</button>
-</form>
+    h2 {
+      margin-top: 2rem;
+      color: #333;
+    }
 
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 0.8rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    form {
+      display: inline-block;
+      margin-top: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button[type="submit"] {
+      background-color: #007BFF;
+    }
+
+    .status-box {
+      background-color: #f9f9f9;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      margin-top: 1.5rem;
+    }
+
+    .status-box p {
+      margin: 0.5rem 0;
+    }
+
+    hr {
+      margin: 1.5rem 0;
+      border: 1px solid #ddd;
+    }
+
+    p {
+      color: #333;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <a th:href="@{/}">Home</a>
+  <a th:href="@{/migrate}">Migrate Students</a>
+  <a th:href="@{/semester/migrate-semesters}">Migrate Semesters</a>
+  <a th:href="@{/student-subject}">Subject Enrollments</a>
+</nav>
+
+<div>
+  <h2>MS Semesters</h2>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Description</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Action</th>
+    </tr>
+    <tr th:each="sem : ${mssemesters}">
+      <td th:text="${sem.id}"></td>
+      <td th:text="${sem.description}"></td>
+      <td th:text="${sem.startDate}"></td>
+      <td th:text="${sem.endDate}"></td>
+      <td>
+        <form th:action="@{/semester/migrate-semesters}" method="post">
+          <input type="hidden" name="semesterId" th:value="${sem.id}"/>
+          <button type="submit">Migrate</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+  <p th:if="${#lists.isEmpty(mssemesters)}">No semesters found in SQL Server.</p>
+
+  <h2>P Semesters</h2>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Description</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+    </tr>
+    <tr th:each="sem : ${psemesters}">
+      <td th:text="${sem.id}"></td>
+      <td th:text="${sem.description}"></td>
+      <td th:text="${sem.startDate}"></td>
+      <td th:text="${sem.endDate}"></td>
+    </tr>
+  </table>
+  <p th:if="${#lists.isEmpty(psemesters)}">No semesters found in Postgres.</p>
+
+  <form th:action="@{/semester/migrate-semesters/download-failed}" method="get"
+        th:if="${failed != null and !#lists.isEmpty(failed)}">
+    <button type="submit">Download Failed Semesters CSV</button>
+  </form>
+</div>
+
+</body>
+</html>

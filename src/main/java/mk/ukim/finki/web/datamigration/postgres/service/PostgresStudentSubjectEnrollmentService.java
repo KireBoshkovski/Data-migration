@@ -6,6 +6,7 @@ import mk.ukim.finki.web.datamigration.postgres.repository.PostgresStudentSubjec
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,5 +20,9 @@ public class PostgresStudentSubjectEnrollmentService {
 
     public List<PStudentSubjectEnrollment> findAll(){
         return repository.findAll();
+    }
+
+    public Optional<PStudentSubjectEnrollment> findByStudentAndCourseCode(Long index, String courseCode) {
+        return repository.findByCourseCodeAndStudent_Index(courseCode, index);
     }
 }
