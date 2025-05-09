@@ -2,7 +2,9 @@ package mk.ukim.finki.web.datamigration.web;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import mk.ukim.finki.web.datamigration.postgres.service.PostgresStudentSubjectEnrollmentService;
+import mk.ukim.finki.web.datamigration.dto.MigrationResult;
+import mk.ukim.finki.web.datamigration.migration.MigrationService;
+import mk.ukim.finki.web.datamigration.postgres.service.PStudentSubjectEnrollmentService;
 import mk.ukim.finki.web.datamigration.sqlserver.service.MStudentSubjectEnrollmentService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,25 +21,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 @AllArgsConstructor
 public class StudentSubjectEnrollmentController {
     private final MigrationService migrationService;
-    private final PostgresStudentSubjectEnrollmentService postgresStudentSubjectEnrollmentService;
+    private final PStudentSubjectEnrollmentService pStudentSubjectEnrollmentService;
     private final MStudentSubjectEnrollmentService mStudentSubjectEnrollmentService;
 
-    @GetMapping
+    @GetMapping("/migrate")
     public String listAll(Model model) {
         model.addAttribute("studentSubjectEnrollments", mStudentSubjectEnrollmentService.findAll());
-        model.addAttribute("postgresStudentSubjectEnrollments", postgresStudentSubjectEnrollmentService.findAll());
+        model.addAttribute("postgresStudentSubjectEnrollments", pStudentSubjectEnrollmentService.findAll());
 
         return "student-subject-enrollments";
     }
 
-    @PostMapping("/migrate-by-course")
-    public String migrateByCourseCode(@RequestParam String courseCode,Model model, HttpSession session) {
+    @PostMapping("/migrate")
+    public String migrateByCourseCode(@RequestParam String courseCode, Model model, HttpSession session) {
         System.out.println("Received courseCode: " + courseCode);
+        model.addAttribute("studentSubjectEnrollments", mStudentSubjectEnrollmentService.findAll());
+        model.addAttribute("postgresStudentSubjectEnrollments", pStudentSubjectEnrollmentService.findAll());
+
         MigrationResult result = migrationService.migrateByCourseCode(courseCode);
         model.addAttribute("migrated", result.getMigrated());
         model.addAttribute("failed", result.getFailed());
         session.setAttribute("csvContent", result.getCsv());
-        return "redirect:/student-subject";
+        return "student-subject-enrollments";
     }
 
     @GetMapping("/migrate/download-failed")

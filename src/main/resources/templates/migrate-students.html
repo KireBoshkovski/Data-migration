@@ -64,16 +64,48 @@
             margin-top: 2rem;
             color: #333;
         }
+
+        h1 {
+            color: #333;
+            margin-top: 1.5rem;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+        p {
+            color: #333;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
 
 <!-- Navbar -->
 <nav>
-    <a th:href="@{/}">Home</a>
-    <a th:href="@{/migrate}">Migrate Students</a>
-    <a th:href="@{/semester/migrate-semesters}">Migrate Semesters</a>
-    <a th:href="@{/student-subject}">Subject Enrollments</a>
+    <a th:href="@{/students/migrate}">Migrate Students</a>
+    <a th:href="@{/semesters/migrate}">Migrate Semesters</a>
+    <a th:href="@{/student-subject/migrate}">Subject Enrollments</a>
 </nav>
 
 <div>
@@ -85,14 +117,14 @@
 
         <div th:if="${failed > 0}">
             <p>📄 Download list of failed students:</p>
-            <form th:action="@{/migrate/download-failed}" method="get">
+            <form th:action="@{/students/migrate/download-failed}" method="get">
                 <button type="submit">Download Failed</button>
             </form>
         </div>
         <hr>
     </div>
 
-    <form th:action="@{/migrate}" method="post">
+    <form th:action="@{/students/migrate}" method="post">
         <label for="semesterId">Select Semester:</label>
         <select id="semesterId" name="semesterId">
             <option th:each="semester : ${semesters}"
@@ -102,6 +134,35 @@
         </select>
         <button type="submit">Migrate</button>
     </form>
+</div>
+
+
+<div>
+    <h1>Student Lists</h1>
+
+    <h2>MS Students</h2>
+    <table>
+        <tr>
+            <th>Index</th>
+            <th>Name</th>
+        </tr>
+        <tr th:each="student : ${mstudents}">
+            <td th:text="${student.index}"></td>
+            <td th:text="${student.name}"></td>
+        </tr>
+    </table>
+
+    <h2>P Students</h2>
+    <table>
+        <tr>
+            <th>Index</th>
+            <th>Name</th>
+        </tr>
+        <tr th:each="student : ${pstudents}">
+            <td th:text="${student.index}"></td>
+            <td th:text="${student.name}"></td>
+        </tr>
+    </table>
 </div>
 
 </body>

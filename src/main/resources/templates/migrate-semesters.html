@@ -84,11 +84,24 @@
 
 <!-- Navbar -->
 <nav>
-  <a th:href="@{/}">Home</a>
-  <a th:href="@{/migrate}">Migrate Students</a>
-  <a th:href="@{/semester/migrate-semesters}">Migrate Semesters</a>
-  <a th:href="@{/student-subject}">Subject Enrollments</a>
+    <a th:href="@{/students/migrate}">Migrate Students</a>
+    <a th:href="@{/semesters/migrate}">Migrate Semesters</a>
+    <a th:href="@{/student-subject/migrate}">Subject Enrollments</a>
 </nav>
+
+
+<div th:if="${migrated != null}" class="status-box">
+    <p>✅ Successfully migrated: <strong th:text="${migrated}">0</strong></p>
+    <p>❌ Failed to migrate: <strong th:text="${failed}">0</strong></p>
+
+    <div th:if="${failed > 0}">
+        <p>📄 Download list of failed student-subject enrollments:</p>
+        <form th:action="@{/semesters/migrate/download-failed}" method="get">
+            <button type="submit">Download Failed</button>
+        </form>
+    </div>
+    <hr>
+</div>
 
 <div>
   <h2>MS Semesters</h2>
@@ -106,7 +119,7 @@
       <td th:text="${sem.startDate}"></td>
       <td th:text="${sem.endDate}"></td>
       <td>
-        <form th:action="@{/semester/migrate-semesters}" method="post">
+        <form th:action="@{/semesters/migrate}" method="post">
           <input type="hidden" name="semesterId" th:value="${sem.id}"/>
           <button type="submit">Migrate</button>
         </form>
@@ -131,11 +144,6 @@
     </tr>
   </table>
   <p th:if="${#lists.isEmpty(psemesters)}">No semesters found in Postgres.</p>
-
-  <form th:action="@{/semester/migrate-semesters/download-failed}" method="get"
-        th:if="${failed != null and !#lists.isEmpty(failed)}">
-    <button type="submit">Download Failed Semesters CSV</button>
-  </form>
 </div>
 
 </body>

@@ -2,8 +2,10 @@ package mk.ukim.finki.web.datamigration.web;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import mk.ukim.finki.web.datamigration.dto.MigrationResult;
+import mk.ukim.finki.web.datamigration.migration.MigrationService;
 import mk.ukim.finki.web.datamigration.postgres.model.PStudent;
-import mk.ukim.finki.web.datamigration.postgres.service.PostgresStudentService;
+import mk.ukim.finki.web.datamigration.postgres.service.PStudentService;
 import mk.ukim.finki.web.datamigration.sqlserver.model.MStudent;
 import mk.ukim.finki.web.datamigration.sqlserver.service.MSemesterService;
 import mk.ukim.finki.web.datamigration.sqlserver.service.MStudentService;
@@ -21,18 +23,18 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping({"", "/"})
+@RequestMapping({"", "/", "/students"})
 @AllArgsConstructor
 public class StudentController {
     private final MStudentService sqlServerStudentService;
-    private final PostgresStudentService postgresStudentService;
-    private final MSemesterService semesterService;
+    private final PStudentService pStudentService;
+    private final MSemesterService mSemesterService;
     private final MigrationService migrationService;
 
     @GetMapping
     public String listAll(Model model) {
         List<MStudent> msstudents = this.sqlServerStudentService.findAll();
-        List<PStudent> pstudents = this.postgresStudentService.findAll();
+        List<PStudent> pstudents = this.pStudentService.findAll();
 
         model.addAttribute("msstudents", msstudents);
         model.addAttribute("pstudents", pstudents);
@@ -42,8 +44,9 @@ public class StudentController {
 
     @GetMapping("/migrate")
     public String showMigrateStudent(Model model) {
-        model.addAttribute("semesters", this.semesterService.getAllSemesters());
-
+        model.addAttribute("semesters", this.mSemesterService.getAllSemesters());
+        model.addAttribute("mstudents", this.sqlServerStudentService.findAll());
+        model.addAttribute("pstudents", this.pStudentService.findAll());
         return "migrate-students";
     }
 
@@ -53,8 +56,10 @@ public class StudentController {
 
         model.addAttribute("migrated", result.getMigrated());
         model.addAttribute("failed", result.getFailed());
+        model.addAttribute("mstudents", this.sqlServerStudentService.findAll());
+        model.addAttribute("pstudents", this.pStudentService.findAll());
         session.setAttribute("csvContent", result.getCsv());
-        model.addAttribute("semesters", this.semesterService.getAllSemesters());
+        model.addAttribute("semesters", this.mSemesterService.getAllSemesters());
         return "migrate-students";
     }
 

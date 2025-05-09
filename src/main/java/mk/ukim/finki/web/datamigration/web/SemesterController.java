@@ -2,8 +2,10 @@ package mk.ukim.finki.web.datamigration.web;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import mk.ukim.finki.web.datamigration.dto.MigrationResult;
+import mk.ukim.finki.web.datamigration.migration.MigrationService;
 import mk.ukim.finki.web.datamigration.postgres.model.PSemester;
-import mk.ukim.finki.web.datamigration.postgres.service.PostgresSemesterService;
+import mk.ukim.finki.web.datamigration.postgres.service.PSemesterService;
 import mk.ukim.finki.web.datamigration.sqlserver.model.MSemester;
 import mk.ukim.finki.web.datamigration.sqlserver.service.MSemesterService;
 import org.springframework.http.HttpHeaders;
@@ -20,18 +22,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping({"/semester"})
+@RequestMapping({"/semesters"})
 @AllArgsConstructor
 public class SemesterController {
     private final MSemesterService sqlServerSemesterService;
-    private final PostgresSemesterService postgresServerSemesterService;
+    private final PSemesterService pServerSemesterService;
     private final MSemesterService mSemesterService;
     private final MigrationService migrationService;
 
     @GetMapping()
     public String listAll(Model model) {
         List<MSemester> mssemesters = this.sqlServerSemesterService.getAllSemesters();
-        List<PSemester> psemesters = this.postgresServerSemesterService.findAll();
+        List<PSemester> psemesters = this.pServerSemesterService.findAll();
 
         model.addAttribute("mssemesters", mssemesters);
         model.addAttribute("psemesters", psemesters);
@@ -39,17 +41,17 @@ public class SemesterController {
         return "semesters";
     }
 
-    @GetMapping("/migrate-semesters")
+    @GetMapping("/migrate")
     public String showMigrateSemesters(Model model) {
         List<MSemester> mssemesters = mSemesterService.getAllSemesters();
-        List<PSemester> psemesters = postgresServerSemesterService.findAll();
+        List<PSemester> psemesters = pServerSemesterService.findAll();
 
         model.addAttribute("mssemesters", mssemesters);
         model.addAttribute("psemesters", psemesters);
         return "migrate-semesters";
     }
 
-    @PostMapping("/migrate-semesters")
+    @PostMapping("/migrate")
     public String migrateSemesters(@RequestParam Long semesterId, RedirectAttributes redirectAttributes, HttpSession session) {
         MigrationResult result = migrationService.migrateSemesters(semesterId);
 
@@ -61,7 +63,7 @@ public class SemesterController {
     }
 
 
-    @GetMapping("/migrate-semesters/download-failed")
+    @GetMapping("/migrate/download-failed")
     public ResponseEntity<byte[]> downloadFailedSemesters(HttpSession session) {
         String content = (String) session.getAttribute("csvContent");
         byte[] bytes = content.getBytes();

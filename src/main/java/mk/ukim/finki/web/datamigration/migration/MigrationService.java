@@ -1,12 +1,13 @@
-package mk.ukim.finki.web.datamigration.web;
+package mk.ukim.finki.web.datamigration.migration;
 
 import lombok.AllArgsConstructor;
+import mk.ukim.finki.web.datamigration.dto.MigrationResult;
 import mk.ukim.finki.web.datamigration.postgres.model.PSemester;
 import mk.ukim.finki.web.datamigration.postgres.model.PStudent;
 import mk.ukim.finki.web.datamigration.postgres.model.PStudentSubjectEnrollment;
-import mk.ukim.finki.web.datamigration.postgres.service.PostgresSemesterService;
-import mk.ukim.finki.web.datamigration.postgres.service.PostgresStudentService;
-import mk.ukim.finki.web.datamigration.postgres.service.PostgresStudentSubjectEnrollmentService;
+import mk.ukim.finki.web.datamigration.postgres.service.PSemesterService;
+import mk.ukim.finki.web.datamigration.postgres.service.PStudentService;
+import mk.ukim.finki.web.datamigration.postgres.service.PStudentSubjectEnrollmentService;
 import mk.ukim.finki.web.datamigration.sqlserver.model.MSemester;
 import mk.ukim.finki.web.datamigration.sqlserver.model.MStudent;
 import mk.ukim.finki.web.datamigration.sqlserver.model.MStudentSubjectEnrollment;
@@ -25,13 +26,13 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class MigrationService {
-    private final PostgresStudentService postgresStudentService;
+    private final PStudentService pStudentService;
     private final MStudentService sqlServerStudentService;
 
-    private final PostgresSemesterService postgresSemesterService;
+    private final PSemesterService postgresSemesterService;
     private final MSemesterService sqlServerSemesterService;
 
-    private final PostgresStudentSubjectEnrollmentService pStudentSubjectEnrollmentService;
+    private final PStudentSubjectEnrollmentService pStudentSubjectEnrollmentService;
     private final MStudentSubjectEnrollmentService msStudentSubjectEnrollmentService;
 
     public MigrationResult migrateStudents(Long semesterId) {
@@ -49,7 +50,7 @@ public class MigrationService {
                 destinationStudent.setFathersName(student.getFathersName());
                 destinationStudent.setProgramCode(student.getProgramCode());
                 destinationStudent.setStartYear(student.getStartYear());
-                this.postgresStudentService.save(destinationStudent);
+                this.pStudentService.save(destinationStudent);
                 System.out.println("Student: " + destinationStudent + " successfully migrated!");
                 migrated++;
             } catch (DataIntegrityViolationException e) {
@@ -161,7 +162,7 @@ public class MigrationService {
                 Long studentIndex = mEnrollment.getStudent().getIndex();
                 System.out.println("Processing enrollment for student index: " + studentIndex);
 
-                Optional<PStudent> pStudentOpt = postgresStudentService.findByIndex(studentIndex);
+                Optional<PStudent> pStudentOpt = pStudentService.findByIndex(studentIndex);
 
                 if (pStudentOpt.isEmpty()) {
                     System.out.println("Student not found in Postgres: " + studentIndex);

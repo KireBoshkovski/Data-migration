@@ -69,39 +69,11 @@
 
 <!-- Navbar -->
 <nav>
-    <a th:href="@{/}">Home</a>
     <a th:href="@{/migrate}">Migrate Students</a>
     <a th:href="@{/semester/migrate-semesters}">Migrate Semesters</a>
     <a th:href="@{/student-subject}">Subject Enrollments</a>
 </nav>
 
-<div>
-    <h1>Student Lists</h1>
-
-    <h2>MS Students</h2>
-    <table>
-        <tr>
-            <th>Index</th>
-            <th>Name</th>
-        </tr>
-        <tr th:each="student : ${msstudents}">
-            <td th:text="${student.index}"></td>
-            <td th:text="${student.name}"></td>
-        </tr>
-    </table>
-
-    <h2>P Students</h2>
-    <table>
-        <tr>
-            <th>Index</th>
-            <th>Name</th>
-        </tr>
-        <tr th:each="student : ${pstudents}">
-            <td th:text="${student.index}"></td>
-            <td th:text="${student.name}"></td>
-        </tr>
-    </table>
-</div>
 
 </body>
 </html>

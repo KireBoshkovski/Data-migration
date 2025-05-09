@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostgresSemesterRepository extends JpaRepository<PSemester, String> {
+public interface PSemesterRepository extends JpaRepository<PSemester, String> {
 }

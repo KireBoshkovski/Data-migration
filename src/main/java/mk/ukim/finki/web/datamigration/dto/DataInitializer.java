@@ -1,4 +1,4 @@
-package mk.ukim.finki.web.datamigration.web;
+package mk.ukim.finki.web.datamigration.dto;
 
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface PostgresStudentSubjectEnrollmentRepository extends JpaRepository<PStudentSubjectEnrollment, String> {
+public interface PStudentSubjectEnrollmentRepository extends JpaRepository<PStudentSubjectEnrollment, String> {
     Optional<PStudentSubjectEnrollment> findByCourseCodeAndStudent_Index(String courseCode, Long index);
 }
