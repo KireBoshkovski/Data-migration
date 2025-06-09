@@ -48,9 +48,9 @@
 
 <!-- Navbar -->
 <nav>
-    <a th:href="@{/students/migrate}">Migrate Students</a>
-    <a th:href="@{/semesters/migrate}">Migrate Semesters</a>
-    <a th:href="@{/student-subject/migrate}">Subject Enrollments</a>
+    <a th:href="@{/students}">Migrate Students</a>
+    <a th:href="@{/semesters}">Migrate Semesters</a>
+    <a th:href="@{/student-subject}">Subject Enrollments</a>
 </nav>
 
 
@@ -60,7 +60,7 @@
 
     <div th:if="${failed > 0}">
         <p>📄 Download list of failed student-subject enrollments:</p>
-        <form th:action="@{/student-subject/migrate/download-failed}" method="get">
+        <form th:action="@{/student-subject/download-failed}" method="get">
             <button type="submit">Download Failed</button>
         </form>
     </div>
@@ -68,7 +68,7 @@
 </div>
 
 <h3>Migrate by Course Code</h3>
-<form th:action="@{/student-subject/migrate-by-course}" method="post">
+<form th:action="@{/student-subject}" method="post">
     <input type="text" name="courseCode" placeholder="Enter Course Code" required/>
     <button type="submit">Migrate</button>
 </form>

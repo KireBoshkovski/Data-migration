@@ -4,9 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.web.datamigration.dto.MigrationResult;
 import mk.ukim.finki.web.datamigration.migration.MigrationService;
-import mk.ukim.finki.web.datamigration.postgres.model.PStudent;
 import mk.ukim.finki.web.datamigration.postgres.service.PStudentService;
-import mk.ukim.finki.web.datamigration.sqlserver.model.MStudent;
 import mk.ukim.finki.web.datamigration.sqlserver.service.MSemesterService;
 import mk.ukim.finki.web.datamigration.sqlserver.service.MStudentService;
 import org.springframework.http.HttpHeaders;
@@ -19,11 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 
 @Controller
-@RequestMapping({"", "/", "/students"})
+@RequestMapping("/students")
 @AllArgsConstructor
 public class StudentController {
     private final MStudentService sqlServerStudentService;
@@ -31,18 +27,7 @@ public class StudentController {
     private final MSemesterService mSemesterService;
     private final MigrationService migrationService;
 
-    @GetMapping
-    public String listAll(Model model) {
-        List<MStudent> msstudents = this.sqlServerStudentService.findAll();
-        List<PStudent> pstudents = this.pStudentService.findAll();
-
-        model.addAttribute("msstudents", msstudents);
-        model.addAttribute("pstudents", pstudents);
-
-        return "index";
-    }
-
-    @GetMapping("/migrate")
+    @GetMapping()
     public String showMigrateStudent(Model model) {
         model.addAttribute("semesters", this.mSemesterService.getAllSemesters());
         model.addAttribute("mstudents", this.sqlServerStudentService.findAll());
@@ -50,7 +35,7 @@ public class StudentController {
         return "migrate-students";
     }
 
-    @PostMapping("/migrate")
+    @PostMapping()
     public String migrateStudents(@RequestParam Long semesterId, Model model, HttpSession session) {
         MigrationResult result = this.migrationService.migrateStudents(semesterId);
 
@@ -63,7 +48,7 @@ public class StudentController {
         return "migrate-students";
     }
 
-    @GetMapping("/migrate/download-failed")
+    @GetMapping("/download-failed")
     public ResponseEntity<byte[]> downloadFailedStudents(HttpSession session) {
         String content = (String) session.getAttribute("csvContent");
         byte[] bytes = content.getBytes();

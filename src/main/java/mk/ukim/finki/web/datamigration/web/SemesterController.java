@@ -25,33 +25,21 @@ import java.util.List;
 @RequestMapping({"/semesters"})
 @AllArgsConstructor
 public class SemesterController {
-    private final MSemesterService sqlServerSemesterService;
-    private final PSemesterService pServerSemesterService;
+    private final PSemesterService pSemesterService;
     private final MSemesterService mSemesterService;
     private final MigrationService migrationService;
 
     @GetMapping()
-    public String listAll(Model model) {
-        List<MSemester> mssemesters = this.sqlServerSemesterService.getAllSemesters();
-        List<PSemester> psemesters = this.pServerSemesterService.findAll();
-
-        model.addAttribute("mssemesters", mssemesters);
-        model.addAttribute("psemesters", psemesters);
-
-        return "semesters";
-    }
-
-    @GetMapping("/migrate")
     public String showMigrateSemesters(Model model) {
         List<MSemester> mssemesters = mSemesterService.getAllSemesters();
-        List<PSemester> psemesters = pServerSemesterService.findAll();
+        List<PSemester> psemesters = pSemesterService.findAll();
 
         model.addAttribute("mssemesters", mssemesters);
         model.addAttribute("psemesters", psemesters);
         return "migrate-semesters";
     }
 
-    @PostMapping("/migrate")
+    @PostMapping()
     public String migrateSemesters(@RequestParam Long semesterId, RedirectAttributes redirectAttributes, HttpSession session) {
         MigrationResult result = migrationService.migrateSemesters(semesterId);
 
@@ -59,11 +47,10 @@ public class SemesterController {
         redirectAttributes.addFlashAttribute("failed", result.getFailed());
         session.setAttribute("csvContent", result.getCsv());
 
-        return "redirect:/semester/migrate-semesters";
+        return "redirect:/semesters";
     }
 
-
-    @GetMapping("/migrate/download-failed")
+    @GetMapping("/download-failed")
     public ResponseEntity<byte[]> downloadFailedSemesters(HttpSession session) {
         String content = (String) session.getAttribute("csvContent");
         byte[] bytes = content.getBytes();

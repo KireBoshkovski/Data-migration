@@ -93,6 +93,7 @@
         th {
             background-color: #f0f0f0;
         }
+
         p {
             color: #333;
             margin-top: 1rem;
@@ -103,9 +104,9 @@
 
 <!-- Navbar -->
 <nav>
-    <a th:href="@{/students/migrate}">Migrate Students</a>
-    <a th:href="@{/semesters/migrate}">Migrate Semesters</a>
-    <a th:href="@{/student-subject/migrate}">Subject Enrollments</a>
+    <a th:href="@{/students}">Migrate Students</a>
+    <a th:href="@{/semesters}">Migrate Semesters</a>
+    <a th:href="@{/student-subject}">Subject Enrollments</a>
 </nav>
 
 <div>
@@ -117,14 +118,14 @@
 
         <div th:if="${failed > 0}">
             <p>📄 Download list of failed students:</p>
-            <form th:action="@{/students/migrate/download-failed}" method="get">
+            <form th:action="@{/students/download-failed}" method="get">
                 <button type="submit">Download Failed</button>
             </form>
         </div>
         <hr>
     </div>
 
-    <form th:action="@{/students/migrate}" method="post">
+    <form th:action="@{/students}" method="post">
         <label for="semesterId">Select Semester:</label>
         <select id="semesterId" name="semesterId">
             <option th:each="semester : ${semesters}"
@@ -144,11 +145,20 @@
     <table>
         <tr>
             <th>Index</th>
-            <th>Name</th>
+            <th>Email</th>
+            <th>Fathers name</th>
+            <th>Surname</th>
+            <th>Program Code</th>
+            <th>Start year</th>
         </tr>
         <tr th:each="student : ${mstudents}">
             <td th:text="${student.index}"></td>
+            <td th:text="${student.email}"></td>
             <td th:text="${student.name}"></td>
+            <td th:text="${student.fathersName}"></td>
+            <td th:text="${student.surname}"></td>
+            <td th:text="${student.programCode}"></td>
+            <td th:text="${student.startYear}"></td>
         </tr>
     </table>
 
@@ -156,11 +166,20 @@
     <table>
         <tr>
             <th>Index</th>
-            <th>Name</th>
+            <th>Email</th>
+            <th>Fathers name</th>
+            <th>Surname</th>
+            <th>Program Code</th>
+            <th>Start year</th>
         </tr>
         <tr th:each="student : ${pstudents}">
             <td th:text="${student.index}"></td>
+            <td th:text="${student.email}"></td>
             <td th:text="${student.name}"></td>
+            <td th:text="${student.fathersName}"></td>
+            <td th:text="${student.surname}"></td>
+            <td th:text="${student.programCode}"></td>
+            <td th:text="${student.startYear}"></td>
         </tr>
     </table>
 </div>

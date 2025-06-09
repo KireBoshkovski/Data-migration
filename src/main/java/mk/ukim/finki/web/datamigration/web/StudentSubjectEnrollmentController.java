@@ -24,7 +24,7 @@ public class StudentSubjectEnrollmentController {
     private final PStudentSubjectEnrollmentService pStudentSubjectEnrollmentService;
     private final MStudentSubjectEnrollmentService mStudentSubjectEnrollmentService;
 
-    @GetMapping("/migrate")
+    @GetMapping()
     public String listAll(Model model) {
         model.addAttribute("studentSubjectEnrollments", mStudentSubjectEnrollmentService.findAll());
         model.addAttribute("postgresStudentSubjectEnrollments", pStudentSubjectEnrollmentService.findAll());
@@ -32,20 +32,22 @@ public class StudentSubjectEnrollmentController {
         return "student-subject-enrollments";
     }
 
-    @PostMapping("/migrate")
+    @PostMapping()
     public String migrateByCourseCode(@RequestParam String courseCode, Model model, HttpSession session) {
         System.out.println("Received courseCode: " + courseCode);
-        model.addAttribute("studentSubjectEnrollments", mStudentSubjectEnrollmentService.findAll());
-        model.addAttribute("postgresStudentSubjectEnrollments", pStudentSubjectEnrollmentService.findAll());
 
         MigrationResult result = migrationService.migrateByCourseCode(courseCode);
         model.addAttribute("migrated", result.getMigrated());
         model.addAttribute("failed", result.getFailed());
         session.setAttribute("csvContent", result.getCsv());
+
+        model.addAttribute("studentSubjectEnrollments", mStudentSubjectEnrollmentService.findAll());
+        model.addAttribute("postgresStudentSubjectEnrollments", pStudentSubjectEnrollmentService.findAll());
+
         return "student-subject-enrollments";
     }
 
-    @GetMapping("/migrate/download-failed")
+    @GetMapping("/download-failed")
     public ResponseEntity<byte[]> downloadFailedSubjects(HttpSession session) {
         String content = (String) session.getAttribute("csvContent");
         byte[] bytes = content.getBytes();
