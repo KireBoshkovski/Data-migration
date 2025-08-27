@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Migration</title>
+    <style>
+        nav {
+            background-color: #f0f0f0;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        nav a {
+            margin-right: 1.5rem;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        form {
+            margin-top: 1.5rem;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        select {
+            padding: 0.5rem;
+            margin-right: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background-color: #007BFF;
+        }
+
+        .status-box {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            margin-top: 1.5rem;
+        }
+
+        .status-box p {
+            margin: 0.5rem 0;
+        }
+
+        hr {
+            margin: 1.5rem 0;
+            border: 1px solid #ddd;
+        }
+
+        h2 {
+            margin-top: 2rem;
+            color: #333;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 1.5rem;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        p {
+            color: #333;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+    <a th:href="@{/students}">Migrate Students</a>
+    <a th:href="@{/semesters}">Migrate Semesters</a>
+    <a th:href="@{/student-subject}">Subject Enrollments</a>
+</nav>
+
+<div>
+    <h2>Student Migration</h2>
+
+    <div th:if="${migrated != null}" class="status-box">
+        <p>✅ Successfully migrated: <strong th:text="${migrated}">0</strong></p>
+        <p>❌ Failed to migrate: <strong th:text="${failed}">0</strong></p>
+
+        <div th:if="${failed > 0}">
+            <p>📄 Download list of failed students:</p>
+            <form th:action="@{/students/download-failed}" method="get">
+                <button type="submit">Download Failed</button>
+            </form>
+        </div>
+        <hr>
+    </div>
+
+    <form th:action="@{/students}" method="post">
+        <label for="semesterId">Select Semester:</label>
+        <select id="semesterId" name="semesterId">
+            <option th:each="semester : ${semesters}"
+                    th:value="${semester.id}"
+                    th:text="${semester.id}">
+            </option>
+        </select>
+        <button type="submit">Migrate</button>
+    </form>
+</div>
+
+
+<div>
+    <h1>Student Lists</h1>
+
+    <h2>MS Students</h2>
+    <table>
+        <tr>
+            <th>Index</th>
+            <th>Email</th>
+            <th>Fathers name</th>
+            <th>Surname</th>
+            <th>Program Code</th>
+            <th>Start year</th>
+        </tr>
+        <tr th:each="student : ${mstudents}">
+            <td th:text="${student.index}"></td>
+            <td th:text="${student.email}"></td>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.fathersName}"></td>
+            <td th:text="${student.surname}"></td>
+            <td th:text="${student.programCode}"></td>
+            <td th:text="${student.startYear}"></td>
+        </tr>
+    </table>
+
+    <h2>P Students</h2>
+    <table>
+        <tr>
+            <th>Index</th>
+            <th>Email</th>
+            <th>Fathers name</th>
+            <th>Surname</th>
+            <th>Program Code</th>
+            <th>Start year</th>
+        </tr>
+        <tr th:each="student : ${pstudents}">
+            <td th:text="${student.index}"></td>
+            <td th:text="${student.email}"></td>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.fathersName}"></td>
+            <td th:text="${student.surname}"></td>
+            <td th:text="${student.programCode}"></td>
+            <td th:text="${student.startYear}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
